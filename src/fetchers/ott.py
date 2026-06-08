@@ -1,12 +1,13 @@
 import os
 import requests
 from datetime import date, timedelta
+from .genre_map import resolve_movie_genres
 
 TMDB_BASE = "https://api.themoviedb.org/3"
-POSTER_BASE = "https://image.tmdb.org/t/p/w200"
+POSTER_BASE = "https://image.tmdb.org/t/p/w300"
 
-# TMDB watch provider IDs for major OTT platforms
-OTT_PROVIDER_IDS = "8|9|337|350|387|15"  # Netflix|Prime|Disney+|Apple TV+|HBO Max|Hulu
+# Netflix | Prime Video | Disney+ | Apple TV+ | Max | Hulu
+OTT_PROVIDER_IDS = "8|9|337|350|387|15"
 
 
 def fetch_ott_releases() -> list[dict]:
@@ -37,6 +38,7 @@ def fetch_ott_releases() -> list[dict]:
             "overview": m.get("overview", ""),
             "release_date": m.get("release_date", ""),
             "rating": round(m.get("vote_average", 0), 1),
+            "genres": resolve_movie_genres(m.get("genre_ids", [])),
             "poster": f"{POSTER_BASE}{m['poster_path']}" if m.get("poster_path") else None,
         })
     return results

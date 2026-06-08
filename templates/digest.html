@@ -5,141 +5,355 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pop Pixel Digest — {{ date }}</title>
   <style>
-    body { margin: 0; padding: 0; background: #0d0d0d; font-family: 'Helvetica Neue', Arial, sans-serif; color: #e0e0e0; }
-    .wrapper { max-width: 660px; margin: 0 auto; padding: 24px 16px; }
-
-    /* Header */
-    .header { text-align: center; padding: 36px 0 28px; }
-    .header h1 { margin: 0; font-size: 30px; letter-spacing: 3px; color: #f5a623; }
-    .header p  { margin: 8px 0 0; font-size: 13px; color: #777; }
-
-    /* Section */
-    .section { margin: 28px 0; }
-    .section-title {
-      font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      color: #f5a623; border-bottom: 1px solid #2a2a2a; padding-bottom: 8px; margin-bottom: 14px;
+    body  { margin:0; padding:0; background:#07090f; }
+    .shell {
+      max-width: 660px; margin: 0 auto;
+      background: #07090f;
+      font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+      color: #c9d1d9;
     }
 
-    /* Card */
-    .card { display: flex; gap: 12px; background: #1a1a1a; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-    .thumb { width: 64px; min-width: 64px; height: 96px; object-fit: cover; border-radius: 4px; }
-    .thumb-placeholder { width: 64px; min-width: 64px; height: 96px; background: #252525; border-radius: 4px; }
-    .card-body { flex: 1; min-width: 0; }
-    .card-title { margin: 0 0 4px; font-size: 15px; font-weight: 600; color: #fff; }
-    .card-meta  { margin: 0 0 6px; font-size: 12px; color: #777; }
-    .card-overview { margin: 0; font-size: 13px; color: #bbb; line-height: 1.55; }
-    .badge { background: #f5a623; color: #000; border-radius: 3px; padding: 1px 5px; font-size: 11px; font-weight: 700; }
+    /* ── Header ── */
+    .hdr {
+      background: linear-gradient(160deg, #0d1117 0%, #1a0a2e 55%, #0d1117 100%);
+      text-align: center; padding: 44px 24px 36px;
+      border-bottom: 1px solid #1e2433;
+    }
+    .hdr-eyebrow {
+      font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+      color: #4a5568; margin-bottom: 10px;
+    }
+    .hdr-logo {
+      font-size: 34px; font-weight: 900; letter-spacing: 5px;
+      background: linear-gradient(90deg, #f5a623 0%, #e53935 45%, #9c27b0 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin: 0;
+    }
+    .hdr-sub {
+      font-size: 11px; letter-spacing: 3px; color: #4a5568;
+      text-transform: uppercase; margin: 10px 0 0;
+    }
+    .hdr-date {
+      display: inline-block; margin-top: 16px;
+      border: 1px solid #2d3748; border-radius: 20px;
+      color: #718096; font-size: 12px; padding: 5px 16px;
+      background: #0d1117;
+    }
 
-    /* Game card tweak — landscape thumbnail */
-    .thumb-wide { width: 96px; min-width: 96px; height: 64px; object-fit: cover; border-radius: 4px; }
-    .thumb-wide-placeholder { width: 96px; min-width: 96px; height: 64px; background: #252525; border-radius: 4px; }
-    .platforms { margin: 4px 0 0; font-size: 11px; color: #666; }
+    /* ── Section ── */
+    .section { padding: 32px 20px 12px; }
+    .sec-hdr {
+      display: flex; align-items: center; gap: 10px;
+      padding-bottom: 14px; margin-bottom: 18px;
+      border-bottom: 1px solid #111827;
+    }
+    .sec-icon  { font-size: 18px; line-height: 1; }
+    .sec-title { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; }
+    .sec-count {
+      margin-left: auto; font-size: 10px; color: #4a5568;
+      background: #0d1117; border: 1px solid #1e2433;
+      border-radius: 10px; padding: 2px 9px; letter-spacing: 0.5px;
+    }
 
-    /* Empty state */
-    .empty { color: #444; font-size: 13px; margin: 0; }
+    /* ── Hero card ── */
+    .hero {
+      display: flex; border-radius: 10px; overflow: hidden;
+      border: 1px solid #1e2433; margin-bottom: 8px;
+      background: #0d1117;
+    }
+    .hero-img { width: 100px; min-width: 100px; object-fit: cover; display: block; }
+    .hero-img-ph { width: 100px; min-width: 100px; background: #111827; }
+    .hero-body { padding: 16px 18px; flex: 1; min-width: 0; }
+    .hero-badge {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 4px; margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 17px; font-weight: 700; color: #f0f6fc;
+      margin: 0 0 5px; line-height: 1.3;
+    }
+    .hero-meta { font-size: 12px; color: #4a5568; margin: 0 0 10px; }
+    .hero-overview {
+      font-size: 13px; color: #8b949e; line-height: 1.65; margin: 0 0 12px;
+    }
 
-    /* Footer */
-    .footer { border-top: 1px solid #1e1e1e; margin-top: 36px; padding-top: 20px; text-align: center; font-size: 12px; color: #444; }
-    .footer a { color: #f5a623; text-decoration: none; }
+    /* ── Mini card ── */
+    .mini {
+      display: flex; border-radius: 7px; overflow: hidden;
+      border: 1px solid #111827; margin-bottom: 6px;
+      background: #0a0d14;
+    }
+    .mini-bar  { width: 3px; min-width: 3px; flex-shrink: 0; }
+    .mini-img  { width: 52px; min-width: 52px; object-fit: cover; display: block; }
+    .mini-img-ph { width: 52px; min-width: 52px; background: #111827; }
+    .mini-body { padding: 10px 13px; flex: 1; min-width: 0; }
+    .mini-title { font-size: 13px; font-weight: 600; color: #c9d1d9; margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-meta  { font-size: 11px; color: #3d4a5c; margin: 0; }
+
+    /* ── Genres ── */
+    .genres { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 10px; }
+    .genre {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 10px; border: 1px solid;
+    }
+
+    /* ── Rating ── */
+    .rating { display: flex; align-items: center; gap: 6px; }
+    .rating-star { color: #f5a623; font-size: 12px; }
+    .rating-num  { font-size: 13px; font-weight: 700; color: #f5a623; }
+    .rating-track {
+      flex: 1; max-width: 70px; height: 4px;
+      background: #1a2035; border-radius: 2px; overflow: hidden;
+    }
+    .rating-fill { height: 4px; border-radius: 2px; }
+
+    /* ── Platform badges ── */
+    .platforms { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .plat {
+      font-size: 10px; color: #4a5568; background: #0d1117;
+      border: 1px solid #1e2433; border-radius: 4px; padding: 2px 7px;
+    }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid #0d1117; margin: 0 20px; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 32px 20px 36px;
+      border-top: 1px solid #0f1520; margin-top: 20px;
+    }
+    .footer-logo {
+      font-size: 13px; font-weight: 800; letter-spacing: 4px;
+      color: #1e2433; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .footer p   { font-size: 11px; color: #1e2433; margin: 4px 0; }
+    .footer a   { color: #2d3748; text-decoration: none; }
   </style>
 </head>
 <body>
-<div class="wrapper">
+<div class="shell">
 
-  <div class="header">
-    <h1>POP PIXEL DIGEST</h1>
-    <p>{{ date }} &nbsp;&middot;&nbsp; Your daily entertainment roundup</p>
+  <!-- ════════════════════════════════════ HEADER ══ -->
+  <div class="hdr">
+    <div class="hdr-eyebrow">Daily Entertainment Roundup</div>
+    <h1 class="hdr-logo">POP PIXEL DIGEST</h1>
+    <div class="hdr-sub">Movies &nbsp;·&nbsp; TV &nbsp;·&nbsp; Streaming &nbsp;·&nbsp; Games</div>
+    <div class="hdr-date">{{ date }}</div>
   </div>
 
-  <!-- ── Movies ── -->
+  <!-- ════════════════════════════════════ MOVIES ══ -->
   <div class="section">
-    <div class="section-title">🎥 Now In Theaters</div>
+    <div class="sec-hdr">
+      <span class="sec-icon">🎬</span>
+      <span class="sec-title" style="color:#e53935">Now In Theaters</span>
+      {% if movies %}<span class="sec-count">{{ movies|length }} titles</span>{% endif %}
+    </div>
+
     {% for m in movies %}
-    <div class="card">
-      {% if m.poster %}
-        <img class="thumb" src="{{ m.poster }}" alt="{{ m.title }}" />
-      {% else %}
-        <div class="thumb-placeholder"></div>
-      {% endif %}
-      <div class="card-body">
-        <p class="card-title">{{ m.title }}</p>
-        <p class="card-meta">{{ m.release_date }}&ensp;<span class="badge">&#9733; {{ m.rating }}</span></p>
-        <p class="card-overview">{{ m.overview[:160] }}{% if m.overview|length > 160 %}&hellip;{% endif %}</p>
+    {% if loop.first %}
+    <div class="hero" style="border-color:#2a1010">
+      {% if m.poster %}<img class="hero-img" src="{{ m.poster }}" alt="{{ m.title }}" />
+      {% else %}<div class="hero-img-ph"></div>{% endif %}
+      <div class="hero-body">
+        <span class="hero-badge" style="background:#1a0808;color:#e53935">🎥 In Theaters</span>
+        <p class="hero-title">{{ m.title }}</p>
+        <p class="hero-meta">{{ m.release_date }}</p>
+        {% if m.genres %}
+        <div class="genres">
+          {% for g in m.genres %}<span class="genre" style="color:#e53935;border-color:#2a1010">{{ g }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <p class="hero-overview">{{ m.overview[:200] }}{% if m.overview|length > 200 %}&hellip;{% endif %}</p>
+        <div class="rating">
+          <span class="rating-star">&#9733;</span>
+          <span class="rating-num">{{ m.rating }}</span>
+          <div class="rating-track"><div class="rating-fill" style="width:{{ (m.rating / 10 * 100)|int }}%;background:#e53935"></div></div>
+        </div>
       </div>
     </div>
     {% else %}
-    <p class="empty">No movies in theaters today.</p>
+    <div class="mini">
+      <div class="mini-bar" style="background:#e53935"></div>
+      {% if m.poster %}<img class="mini-img" src="{{ m.poster }}" alt="{{ m.title }}" />
+      {% else %}<div class="mini-img-ph"></div>{% endif %}
+      <div class="mini-body">
+        <p class="mini-title">{{ m.title }}</p>
+        <p class="mini-meta">{{ m.release_date }} &ensp;&#9733; {{ m.rating }}{% if m.genres %} &ensp;{{ m.genres[0] }}{% endif %}</p>
+      </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <p style="color:#2d3748;font-size:13px">No movies in theaters today.</p>
     {% endfor %}
   </div>
 
-  <!-- ── TV Shows ── -->
+  <hr class="divider" />
+
+  <!-- ════════════════════════════════════ TV SHOWS ══ -->
   <div class="section">
-    <div class="section-title">📺 TV Shows Airing Today</div>
+    <div class="sec-hdr">
+      <span class="sec-icon">📺</span>
+      <span class="sec-title" style="color:#1e88e5">TV Shows Airing Today</span>
+      {% if tv_shows %}<span class="sec-count">{{ tv_shows|length }} shows</span>{% endif %}
+    </div>
+
     {% for s in tv_shows %}
-    <div class="card">
-      {% if s.poster %}
-        <img class="thumb" src="{{ s.poster }}" alt="{{ s.name }}" />
-      {% else %}
-        <div class="thumb-placeholder"></div>
-      {% endif %}
-      <div class="card-body">
-        <p class="card-title">{{ s.name }}</p>
-        <p class="card-meta">{{ s.first_air_date }}&ensp;<span class="badge">&#9733; {{ s.rating }}</span></p>
-        <p class="card-overview">{{ s.overview[:160] }}{% if s.overview|length > 160 %}&hellip;{% endif %}</p>
+    {% if loop.first %}
+    <div class="hero" style="border-color:#0a1a2e">
+      {% if s.poster %}<img class="hero-img" src="{{ s.poster }}" alt="{{ s.name }}" />
+      {% else %}<div class="hero-img-ph"></div>{% endif %}
+      <div class="hero-body">
+        <span class="hero-badge" style="background:#040e1c;color:#1e88e5">📺 Airing Today</span>
+        <p class="hero-title">{{ s.name }}</p>
+        <p class="hero-meta">First aired {{ s.first_air_date }}</p>
+        {% if s.genres %}
+        <div class="genres">
+          {% for g in s.genres %}<span class="genre" style="color:#1e88e5;border-color:#0a1a2e">{{ g }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <p class="hero-overview">{{ s.overview[:200] }}{% if s.overview|length > 200 %}&hellip;{% endif %}</p>
+        <div class="rating">
+          <span class="rating-star">&#9733;</span>
+          <span class="rating-num">{{ s.rating }}</span>
+          <div class="rating-track"><div class="rating-fill" style="width:{{ (s.rating / 10 * 100)|int }}%;background:#1e88e5"></div></div>
+        </div>
       </div>
     </div>
     {% else %}
-    <p class="empty">No TV shows airing today.</p>
+    <div class="mini">
+      <div class="mini-bar" style="background:#1e88e5"></div>
+      {% if s.poster %}<img class="mini-img" src="{{ s.poster }}" alt="{{ s.name }}" />
+      {% else %}<div class="mini-img-ph"></div>{% endif %}
+      <div class="mini-body">
+        <p class="mini-title">{{ s.name }}</p>
+        <p class="mini-meta">{{ s.first_air_date }} &ensp;&#9733; {{ s.rating }}{% if s.genres %} &ensp;{{ s.genres[0] }}{% endif %}</p>
+      </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <p style="color:#2d3748;font-size:13px">No TV shows airing today.</p>
     {% endfor %}
   </div>
 
-  <!-- ── OTT / Streaming ── -->
+  <hr class="divider" />
+
+  <!-- ════════════════════════════════════ STREAMING ══ -->
   <div class="section">
-    <div class="section-title">📡 New on Streaming (This Week)</div>
+    <div class="sec-hdr">
+      <span class="sec-icon">📡</span>
+      <span class="sec-title" style="color:#00acc1">New on Streaming</span>
+      {% if ott %}<span class="sec-count">{{ ott|length }} titles</span>{% endif %}
+    </div>
+
     {% for r in ott %}
-    <div class="card">
-      {% if r.poster %}
-        <img class="thumb" src="{{ r.poster }}" alt="{{ r.title }}" />
-      {% else %}
-        <div class="thumb-placeholder"></div>
-      {% endif %}
-      <div class="card-body">
-        <p class="card-title">{{ r.title }}</p>
-        <p class="card-meta">{{ r.release_date }}&ensp;<span class="badge">&#9733; {{ r.rating }}</span></p>
-        <p class="card-overview">{{ r.overview[:160] }}{% if r.overview|length > 160 %}&hellip;{% endif %}</p>
+    {% if loop.first %}
+    <div class="hero" style="border-color:#071a1e">
+      {% if r.poster %}<img class="hero-img" src="{{ r.poster }}" alt="{{ r.title }}" />
+      {% else %}<div class="hero-img-ph"></div>{% endif %}
+      <div class="hero-body">
+        <span class="hero-badge" style="background:#030e10;color:#00acc1">📡 Streaming Now</span>
+        <p class="hero-title">{{ r.title }}</p>
+        <p class="hero-meta">{{ r.release_date }}</p>
+        {% if r.genres %}
+        <div class="genres">
+          {% for g in r.genres %}<span class="genre" style="color:#00acc1;border-color:#071a1e">{{ g }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <p class="hero-overview">{{ r.overview[:200] }}{% if r.overview|length > 200 %}&hellip;{% endif %}</p>
+        <div class="rating">
+          <span class="rating-star">&#9733;</span>
+          <span class="rating-num">{{ r.rating }}</span>
+          <div class="rating-track"><div class="rating-fill" style="width:{{ (r.rating / 10 * 100)|int }}%;background:#00acc1"></div></div>
+        </div>
       </div>
     </div>
     {% else %}
-    <p class="empty">No new streaming releases this week.</p>
+    <div class="mini">
+      <div class="mini-bar" style="background:#00acc1"></div>
+      {% if r.poster %}<img class="mini-img" src="{{ r.poster }}" alt="{{ r.title }}" />
+      {% else %}<div class="mini-img-ph"></div>{% endif %}
+      <div class="mini-body">
+        <p class="mini-title">{{ r.title }}</p>
+        <p class="mini-meta">{{ r.release_date }} &ensp;&#9733; {{ r.rating }}{% if r.genres %} &ensp;{{ r.genres[0] }}{% endif %}</p>
+      </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <p style="color:#2d3748;font-size:13px">No new streaming releases this week.</p>
     {% endfor %}
   </div>
 
-  <!-- ── Games ── -->
+  <hr class="divider" />
+
+  <!-- ════════════════════════════════════ GAMES ══ -->
   <div class="section">
-    <div class="section-title">🎮 New Game Releases (This Week)</div>
+    <div class="sec-hdr">
+      <span class="sec-icon">🎮</span>
+      <span class="sec-title" style="color:#fb8c00">New Game Releases</span>
+      {% if games %}<span class="sec-count">{{ games|length }} games</span>{% endif %}
+    </div>
+
     {% for g in games %}
-    <div class="card">
+    {% if loop.first %}
+    <div class="hero" style="border-color:#1e1200">
       {% if g.poster %}
-        <img class="thumb-wide" src="{{ g.poster }}" alt="{{ g.name }}" />
+        <img src="{{ g.poster }}" alt="{{ g.name }}"
+             style="width:120px;min-width:120px;height:80px;object-fit:cover;display:block;" />
       {% else %}
-        <div class="thumb-wide-placeholder"></div>
+        <div style="width:120px;min-width:120px;height:80px;background:#111827;"></div>
       {% endif %}
-      <div class="card-body">
-        <p class="card-title">{{ g.name }}</p>
-        <p class="card-meta">{{ g.released }}&ensp;<span class="badge">&#9733; {{ g.rating }}</span></p>
+      <div class="hero-body">
+        <span class="hero-badge" style="background:#0f0800;color:#fb8c00">🎮 New Release</span>
+        <p class="hero-title">{{ g.name }}</p>
+        <p class="hero-meta">{{ g.released }}</p>
+        {% if g.genres %}
+        <div class="genres">
+          {% for genre in g.genres %}<span class="genre" style="color:#fb8c00;border-color:#2a1a00">{{ genre }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="rating">
+          <span class="rating-star">&#9733;</span>
+          <span class="rating-num">{{ g.rating }}</span>
+          <div class="rating-track"><div class="rating-fill" style="width:{{ (g.rating / 5 * 100)|int }}%;background:#fb8c00"></div></div>
+          <span style="font-size:10px;color:#4a5568">&nbsp;/ 5</span>
+        </div>
         {% if g.platforms %}
-        <p class="platforms">{{ g.platforms | join(' &middot; ') }}</p>
+        <div class="platforms">
+          {% for p in g.platforms %}<span class="plat">{{ p }}</span>{% endfor %}
+        </div>
         {% endif %}
       </div>
     </div>
     {% else %}
-    <p class="empty">No new game releases this week.</p>
+    <div class="mini">
+      <div class="mini-bar" style="background:#fb8c00"></div>
+      {% if g.poster %}
+        <img src="{{ g.poster }}" alt="{{ g.name }}"
+             style="width:52px;min-width:52px;height:36px;object-fit:cover;display:block;" />
+      {% else %}
+        <div style="width:52px;min-width:52px;height:36px;background:#111827;"></div>
+      {% endif %}
+      <div class="mini-body">
+        <p class="mini-title">{{ g.name }}</p>
+        <p class="mini-meta">{{ g.released }} &ensp;&#9733; {{ g.rating }}&nbsp;/5{% if g.platforms %} &ensp;{{ g.platforms[0] }}{% endif %}</p>
+      </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <p style="color:#2d3748;font-size:13px">No new game releases this week.</p>
     {% endfor %}
   </div>
 
+  <!-- ════════════════════════════════════ FOOTER ══ -->
   <div class="footer">
-    <p>You&rsquo;re receiving this because you subscribed to Pop Pixel Digest.</p>
-    <p>Data sourced from <a href="https://www.themoviedb.org/">TMDB</a> &amp; <a href="https://rawg.io/">RAWG</a> &middot; Sent via AWS SES</p>
+    <div class="footer-logo">Pop Pixel Digest</div>
+    <p>You&rsquo;re receiving this because you subscribed.</p>
+    <p>
+      Data from <a href="https://www.themoviedb.org/">TMDB</a>
+      &amp; <a href="https://rawg.io/">RAWG</a>
+      &nbsp;&middot;&nbsp; Sent via AWS SES
+    </p>
   </div>
 
 </div>

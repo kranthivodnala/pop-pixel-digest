@@ -28,6 +28,7 @@ def fetch_games() -> list[dict]:
             "name": g["name"],
             "released": g.get("released", ""),
             "rating": round(g.get("rating", 0), 1),
+            "genres": [genre["name"] for genre in g.get("genres", [])[:3]],
             "platforms": [p["platform"]["name"] for p in g.get("platforms", [])[:4]],
             "poster": g.get("background_image"),
         })

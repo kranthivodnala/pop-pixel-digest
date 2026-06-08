@@ -1,8 +1,9 @@
 import os
 import requests
+from .genre_map import resolve_movie_genres
 
 TMDB_BASE = "https://api.themoviedb.org/3"
-POSTER_BASE = "https://image.tmdb.org/t/p/w200"
+POSTER_BASE = "https://image.tmdb.org/t/p/w300"
 
 
 def fetch_movies() -> list[dict]:
@@ -21,6 +22,7 @@ def fetch_movies() -> list[dict]:
             "overview": m.get("overview", ""),
             "release_date": m.get("release_date", ""),
             "rating": round(m.get("vote_average", 0), 1),
+            "genres": resolve_movie_genres(m.get("genre_ids", [])),
             "poster": f"{POSTER_BASE}{m['poster_path']}" if m.get("poster_path") else None,
         })
     return results
