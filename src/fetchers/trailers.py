@@ -92,20 +92,16 @@ def _tv_trailers(api_key: str, region: str, language: str, label: str, max_resul
 def fetch_trailers() -> list[dict]:
     api_key = os.environ["TMDB_API_KEY"]
 
-    seen_ids: set[str] = set()
+    seen: set[str] = set()
     results: list[dict] = []
 
     for region, language, label in REGIONS:
-        for t in _movie_trailers(api_key, region, language, label, 3):
+        # 1 movie + 1 TV per region = 2 per region × 2 regions = 4 total
+        for t in _movie_trailers(api_key, region, language, label, 1) + \
+                 _tv_trailers(api_key, region, language, label, 1):
             key = t["title"].lower()
-            if key not in seen_ids:
-                seen_ids.add(key)
-                results.append(t)
-
-        for t in _tv_trailers(api_key, region, language, label, 2):
-            key = t["title"].lower()
-            if key not in seen_ids:
-                seen_ids.add(key)
+            if key not in seen:
+                seen.add(key)
                 results.append(t)
 
     return results
