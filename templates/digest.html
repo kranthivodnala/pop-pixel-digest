@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pop Pixel Digest — {{ date }}</title>
+  <style>
+    body { margin: 0; padding: 0; background: #0d0d0d; font-family: 'Helvetica Neue', Arial, sans-serif; color: #e0e0e0; }
+    .wrapper { max-width: 660px; margin: 0 auto; padding: 24px 16px; }
+
+    /* Header */
+    .header { text-align: center; padding: 36px 0 28px; }
+    .header h1 { margin: 0; font-size: 30px; letter-spacing: 3px; color: #f5a623; }
+    .header p  { margin: 8px 0 0; font-size: 13px; color: #777; }
+
+    /* Section */
+    .section { margin: 28px 0; }
+    .section-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: #f5a623; border-bottom: 1px solid #2a2a2a; padding-bottom: 8px; margin-bottom: 14px;
+    }
+
+    /* Card */
+    .card { display: flex; gap: 12px; background: #1a1a1a; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+    .thumb { width: 64px; min-width: 64px; height: 96px; object-fit: cover; border-radius: 4px; }
+    .thumb-placeholder { width: 64px; min-width: 64px; height: 96px; background: #252525; border-radius: 4px; }
+    .card-body { flex: 1; min-width: 0; }
+    .card-title { margin: 0 0 4px; font-size: 15px; font-weight: 600; color: #fff; }
+    .card-meta  { margin: 0 0 6px; font-size: 12px; color: #777; }
+    .card-overview { margin: 0; font-size: 13px; color: #bbb; line-height: 1.55; }
+    .badge { background: #f5a623; color: #000; border-radius: 3px; padding: 1px 5px; font-size: 11px; font-weight: 700; }
+
+    /* Game card tweak — landscape thumbnail */
+    .thumb-wide { width: 96px; min-width: 96px; height: 64px; object-fit: cover; border-radius: 4px; }
+    .thumb-wide-placeholder { width: 96px; min-width: 96px; height: 64px; background: #252525; border-radius: 4px; }
+    .platforms { margin: 4px 0 0; font-size: 11px; color: #666; }
+
+    /* Empty state */
+    .empty { color: #444; font-size: 13px; margin: 0; }
+
+    /* Footer */
+    .footer { border-top: 1px solid #1e1e1e; margin-top: 36px; padding-top: 20px; text-align: center; font-size: 12px; color: #444; }
+    .footer a { color: #f5a623; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <h1>POP PIXEL DIGEST</h1>
+    <p>{{ date }} &nbsp;&middot;&nbsp; Your daily entertainment roundup</p>
+  </div>
+
+  <!-- ── Movies ── -->
+  <div class="section">
+    <div class="section-title">🎥 Now In Theaters</div>
+    {% for m in movies %}
+    <div class="card">
+      {% if m.poster %}
+        <img class="thumb" src="{{ m.poster }}" alt="{{ m.title }}" />
+      {% else %}
+        <div class="thumb-placeholder"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-title">{{ m.title }}</p>
+        <p class="card-meta">{{ m.release_date }}&ensp;<span class="badge">&#9733; {{ m.rating }}</span></p>
+        <p class="card-overview">{{ m.overview[:160] }}{% if m.overview|length > 160 %}&hellip;{% endif %}</p>
+      </div>
+    </div>
+    {% else %}
+    <p class="empty">No movies in theaters today.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ── TV Shows ── -->
+  <div class="section">
+    <div class="section-title">📺 TV Shows Airing Today</div>
+    {% for s in tv_shows %}
+    <div class="card">
+      {% if s.poster %}
+        <img class="thumb" src="{{ s.poster }}" alt="{{ s.name }}" />
+      {% else %}
+        <div class="thumb-placeholder"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-title">{{ s.name }}</p>
+        <p class="card-meta">{{ s.first_air_date }}&ensp;<span class="badge">&#9733; {{ s.rating }}</span></p>
+        <p class="card-overview">{{ s.overview[:160] }}{% if s.overview|length > 160 %}&hellip;{% endif %}</p>
+      </div>
+    </div>
+    {% else %}
+    <p class="empty">No TV shows airing today.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ── OTT / Streaming ── -->
+  <div class="section">
+    <div class="section-title">📡 New on Streaming (This Week)</div>
+    {% for r in ott %}
+    <div class="card">
+      {% if r.poster %}
+        <img class="thumb" src="{{ r.poster }}" alt="{{ r.title }}" />
+      {% else %}
+        <div class="thumb-placeholder"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-title">{{ r.title }}</p>
+        <p class="card-meta">{{ r.release_date }}&ensp;<span class="badge">&#9733; {{ r.rating }}</span></p>
+        <p class="card-overview">{{ r.overview[:160] }}{% if r.overview|length > 160 %}&hellip;{% endif %}</p>
+      </div>
+    </div>
+    {% else %}
+    <p class="empty">No new streaming releases this week.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ── Games ── -->
+  <div class="section">
+    <div class="section-title">🎮 New Game Releases (This Week)</div>
+    {% for g in games %}
+    <div class="card">
+      {% if g.poster %}
+        <img class="thumb-wide" src="{{ g.poster }}" alt="{{ g.name }}" />
+      {% else %}
+        <div class="thumb-wide-placeholder"></div>
+      {% endif %}
+      <div class="card-body">
+        <p class="card-title">{{ g.name }}</p>
+        <p class="card-meta">{{ g.released }}&ensp;<span class="badge">&#9733; {{ g.rating }}</span></p>
+        {% if g.platforms %}
+        <p class="platforms">{{ g.platforms | join(' &middot; ') }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <p class="empty">No new game releases this week.</p>
+    {% endfor %}
+  </div>
+
+  <div class="footer">
+    <p>You&rsquo;re receiving this because you subscribed to Pop Pixel Digest.</p>
+    <p>Data sourced from <a href="https://www.themoviedb.org/">TMDB</a> &amp; <a href="https://rawg.io/">RAWG</a> &middot; Sent via AWS SES</p>
+  </div>
+
+</div>
+</body>
+</html>
