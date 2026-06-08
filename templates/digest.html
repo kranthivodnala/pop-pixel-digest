@@ -115,6 +115,36 @@
       border: 1px solid #1e2433; border-radius: 4px; padding: 2px 7px;
     }
 
+    /* ── Trailer cards ── */
+    .trailer-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .trailer-card {
+      flex: 1 1 280px; border-radius: 10px; overflow: hidden;
+      border: 1px solid #1a1030; background: #0d0a1a;
+    }
+    .trailer-thumb-wrap { position: relative; display: block; }
+    .trailer-thumb { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .trailer-thumb-ph { width: 100%; height: 170px; background: #111827; }
+    .trailer-play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 52px; height: 52px; background: rgba(0,0,0,0.75);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .trailer-play-icon { color: #fff; font-size: 20px; margin-left: 4px; line-height: 1; }
+    .trailer-body { padding: 12px 14px 14px; }
+    .trailer-kind {
+      font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: #9c27b0; margin-bottom: 6px;
+    }
+    .trailer-title { font-size: 14px; font-weight: 700; color: #f0f6fc; margin: 0 0 4px; line-height: 1.3; }
+    .trailer-name  { font-size: 11px; color: #4a5568; margin: 0 0 8px; }
+    .trailer-btn {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      padding: 6px 14px; border-radius: 5px;
+      background: linear-gradient(90deg, #9c27b0, #e53935);
+      color: #fff; text-decoration: none; text-transform: uppercase;
+    }
+
     /* ── Divider ── */
     .divider { border: none; border-top: 1px solid #0d1117; margin: 0 20px; }
 
@@ -138,9 +168,48 @@
   <div class="hdr">
     <div class="hdr-eyebrow">Daily Entertainment Roundup</div>
     <h1 class="hdr-logo">POP PIXEL DIGEST</h1>
-    <div class="hdr-sub">Movies &nbsp;·&nbsp; TV &nbsp;·&nbsp; Streaming &nbsp;·&nbsp; Games</div>
+    <div class="hdr-sub">Trailers &nbsp;·&nbsp; Movies &nbsp;·&nbsp; TV &nbsp;·&nbsp; Streaming &nbsp;·&nbsp; Games</div>
     <div class="hdr-date">{{ date }}</div>
   </div>
+
+  <!-- ════════════════════════════════════ TRAILERS ══ -->
+  {% if trailers %}
+  <div class="section">
+    <div class="sec-hdr">
+      <span class="sec-icon">🎞️</span>
+      <span class="sec-title" style="color:#9c27b0">Trailer Announcements</span>
+      <span class="sec-count">{{ trailers|length }} trailers</span>
+    </div>
+
+    <div class="trailer-grid">
+      {% for t in trailers %}
+      <div class="trailer-card">
+        <a class="trailer-thumb-wrap" href="{{ t.url }}" target="_blank" style="text-decoration:none">
+          {% if t.thumb %}
+            <img class="trailer-thumb" src="{{ t.thumb }}" alt="{{ t.title }}" />
+          {% else %}
+            <div class="trailer-thumb-ph"></div>
+          {% endif %}
+          <div class="trailer-play"><span class="trailer-play-icon">&#9654;</span></div>
+        </a>
+        <div class="trailer-body">
+          <div class="trailer-kind">{% if t.kind == 'movie' %}🎬 Movie{% else %}📺 TV Show{% endif %}</div>
+          <p class="trailer-title">{{ t.title }}</p>
+          <p class="trailer-name">{{ t.trailer_name }}{% if t.release_date %} &nbsp;&middot;&nbsp; {{ t.release_date }}{% endif %}</p>
+          {% if t.genres %}
+          <div class="genres" style="margin-bottom:10px">
+            {% for g in t.genres %}<span class="genre" style="color:#9c27b0;border-color:#2a1040">{{ g }}</span>{% endfor %}
+          </div>
+          {% endif %}
+          <a class="trailer-btn" href="{{ t.url }}" target="_blank">&#9654; Watch Trailer</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <hr class="divider" />
+  {% endif %}
 
   <!-- ════════════════════════════════════ MOVIES ══ -->
   <div class="section">
