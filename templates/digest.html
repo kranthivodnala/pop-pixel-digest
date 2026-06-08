@@ -178,7 +178,11 @@
           {% endif %}
         </div>
         <div class="trailer-body">
-          <div class="trailer-kind">{% if t.kind == 'movie' %}🎬 Movie{% else %}📺 TV Show{% endif %}</div>
+          <div class="trailer-kind">
+            {% if t.kind == 'movie' %}🎬 Movie{% else %}📺 TV Show{% endif %}
+            &nbsp;·&nbsp;
+            {% if t.region_label == 'Indian' %}🇮🇳 Indian{% else %}🌐 International{% endif %}
+          </div>
           <p class="trailer-title">{{ t.title }}</p>
           <p class="trailer-name">{{ t.trailer_name }}{% if t.release_date %} &nbsp;&middot;&nbsp; {{ t.release_date }}{% endif %}</p>
           {% if t.genres %}

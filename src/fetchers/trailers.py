@@ -7,6 +7,12 @@ POSTER_BASE = "https://image.tmdb.org/t/p/w300"
 YT_THUMB = "https://img.youtube.com/vi/{key}/hqdefault.jpg"
 YT_URL = "https://www.youtube.com/watch?v={key}"
 
+# (region, display_label) — IN covers Bollywood, Tamil, Telugu, Malayalam, Kannada
+REGIONS = [
+    ("US", "en-US", "International"),
+    ("IN", "hi-IN", "Indian"),
+]
+
 
 def _first_yt_trailer(videos: list[dict]) -> dict | None:
     return next(
@@ -15,10 +21,20 @@ def _first_yt_trailer(videos: list[dict]) -> dict | None:
     )
 
 
-def _movie_trailers(api_key: str, max_results: int) -> list[dict]:
+def _fetch_videos(api_key: str, media_type: str, media_id: int) -> list[dict]:
+    # Fetch without a language filter so we get native-language trailers too
+    resp = requests.get(
+        f"{TMDB_BASE}/{media_type}/{media_id}/videos",
+        params={"api_key": api_key},
+        timeout=10,
+    )
+    return resp.json().get("results", []) if resp.status_code == 200 else []
+
+
+def _movie_trailers(api_key: str, region: str, language: str, label: str, max_results: int) -> list[dict]:
     resp = requests.get(
         f"{TMDB_BASE}/movie/upcoming",
-        params={"api_key": api_key, "language": "en-US", "page": 1},
+        params={"api_key": api_key, "language": language, "region": region, "page": 1},
         timeout=10,
     )
     resp.raise_for_status()
@@ -27,18 +43,12 @@ def _movie_trailers(api_key: str, max_results: int) -> list[dict]:
     for m in resp.json().get("results", [])[:20]:
         if len(trailers) >= max_results:
             break
-        vids = requests.get(
-            f"{TMDB_BASE}/movie/{m['id']}/videos",
-            params={"api_key": api_key, "language": "en-US"},
-            timeout=10,
-        )
-        if vids.status_code != 200:
-            continue
-        trailer = _first_yt_trailer(vids.json().get("results", []))
+        trailer = _first_yt_trailer(_fetch_videos(api_key, "movie", m["id"]))
         if not trailer:
             continue
         trailers.append({
             "kind": "movie",
+            "region_label": label,
             "title": m["title"],
             "release_date": m.get("release_date", ""),
             "genres": resolve_movie_genres(m.get("genre_ids", [])),
@@ -50,10 +60,10 @@ def _movie_trailers(api_key: str, max_results: int) -> list[dict]:
     return trailers
 
 
-def _tv_trailers(api_key: str, max_results: int) -> list[dict]:
+def _tv_trailers(api_key: str, region: str, language: str, label: str, max_results: int) -> list[dict]:
     resp = requests.get(
         f"{TMDB_BASE}/tv/on_the_air",
-        params={"api_key": api_key, "language": "en-US", "page": 1},
+        params={"api_key": api_key, "language": language, "region": region, "page": 1},
         timeout=10,
     )
     resp.raise_for_status()
@@ -62,18 +72,12 @@ def _tv_trailers(api_key: str, max_results: int) -> list[dict]:
     for s in resp.json().get("results", [])[:20]:
         if len(trailers) >= max_results:
             break
-        vids = requests.get(
-            f"{TMDB_BASE}/tv/{s['id']}/videos",
-            params={"api_key": api_key, "language": "en-US"},
-            timeout=10,
-        )
-        if vids.status_code != 200:
-            continue
-        trailer = _first_yt_trailer(vids.json().get("results", []))
+        trailer = _first_yt_trailer(_fetch_videos(api_key, "tv", s["id"]))
         if not trailer:
             continue
         trailers.append({
             "kind": "tv",
+            "region_label": label,
             "title": s["name"],
             "release_date": s.get("first_air_date", ""),
             "genres": resolve_tv_genres(s.get("genre_ids", [])),
@@ -87,5 +91,21 @@ def _tv_trailers(api_key: str, max_results: int) -> list[dict]:
 
 def fetch_trailers() -> list[dict]:
     api_key = os.environ["TMDB_API_KEY"]
-    # 3 movie trailers + 2 TV trailers = 5 total
-    return _movie_trailers(api_key, 3) + _tv_trailers(api_key, 2)
+
+    seen_ids: set[str] = set()
+    results: list[dict] = []
+
+    for region, language, label in REGIONS:
+        for t in _movie_trailers(api_key, region, language, label, 3):
+            key = t["title"].lower()
+            if key not in seen_ids:
+                seen_ids.add(key)
+                results.append(t)
+
+        for t in _tv_trailers(api_key, region, language, label, 2):
+            key = t["title"].lower()
+            if key not in seen_ids:
+                seen_ids.add(key)
+                results.append(t)
+
+    return results
